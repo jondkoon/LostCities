@@ -2,6 +2,7 @@ require_relative 'card'
 require_relative 'hand'
 require_relative 'deck'
 require_relative 'player'
+require_relative 'stack'
 
 class LostCities
     def initialize(players)
@@ -12,6 +13,7 @@ class LostCities
         @deck = Deck.new
         @players.each{|player| player.draw_cards(@deck) }
         @current_player = pick_first_player
+        @stacks = $suit_characters.keys.map { |suit| Stack.new(suit) }
     end
 
     def to_s

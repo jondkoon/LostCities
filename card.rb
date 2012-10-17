@@ -3,7 +3,7 @@
 class Card
     attr_reader :suit, :rank
 
-    @@suit_characters = {
+    $suit_characters = {
         spade: '♠',
         club: '♣',
         diamond: '♦',
@@ -27,6 +27,6 @@ class Card
     end
 
     def to_s
-        @@rank_characters[@rank]+@@suit_characters[@suit]
+        @@rank_characters[@rank]+$suit_characters[@suit]
     end
 end
