@@ -1,30 +1,26 @@
 require_relative 'stack'
 
 class Player
-    include Comparable
-    attr_reader :hand, :name
+    attr_reader :cards, :name
 
     def initialize(name)
         @name = name
+        @cards = []
         @expedition_stacks = $suit_characters.keys.map { |suit| ExpeditionStack.new(suit) }
     end
 
-    def <=>(other)
-        @hand <=> other.hand
-    end
-
     def place_card_phase
-        card = @hand.pop
+        card = @cards.pop
         discard = @game.discard_stacks.find{|d| d.suit == card.suit }
         discard.place_card card
     end
 
     def draw_card_phase
-        @hand.add_card @game.deck.draw_card
+        @cards.push @game.deck.draw_card
     end
 
     def draw_cards(deck)
-        @hand = Hand.new(deck.draw_cards(8))
+        @cards = deck.draw_cards(8)
     end
 
     public
@@ -39,7 +35,7 @@ class Player
     end
 
     def to_s
-        "#{@name} holds:\n#{@hand}" +
+        "#{@name} holds:\n#{@cards.join("  ")}" +
         "\n\nexpedition stacks: #{@expedition_stacks}"
     end
 end

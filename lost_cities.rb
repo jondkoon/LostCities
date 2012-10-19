@@ -1,5 +1,4 @@
 require_relative 'card'
-require_relative 'hand'
 require_relative 'deck'
 require_relative 'player'
 require_relative 'stack'
@@ -18,7 +17,7 @@ class LostCities
         @discard_stacks = $suit_characters.keys.map { |suit| Stack.new(suit) }
         while @deck.size > 0 do
             @current_player.turn
-            @current_player = @players.find{|p| p != @current_player}
+            @current_player = @players.find{|player| player != @current_player}
         end
     end
 

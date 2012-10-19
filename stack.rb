@@ -19,6 +19,10 @@ class Stack
         end
     end
 
+    def top_card
+        @cards.last
+    end
+
     def to_s
         @cards
     end
