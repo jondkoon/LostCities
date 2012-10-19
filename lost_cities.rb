@@ -5,7 +5,7 @@ require_relative 'player'
 require_relative 'stack'
 
 class LostCities
-    attr_reader :deck
+    attr_reader :deck, :discard_stacks
 
     def initialize(players)
         @players = players

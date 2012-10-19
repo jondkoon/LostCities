@@ -1,5 +1,5 @@
 class Stack
-    attr_reader :cards
+    attr_reader :cards, :suit
 
     def initialize(suit)
         @cards = []
@@ -20,9 +20,7 @@ class Stack
     end
 
     def to_s
-        @cards.each do |card|
-            puts card
-        end
+        @cards
     end
 end
 
