@@ -5,20 +5,29 @@ require_relative 'player'
 require_relative 'stack'
 
 class LostCities
+    attr_reader :deck
+
     def initialize(players)
         @players = players
     end
 
     def start
         @deck = Deck.new
-        @players.each{|player| player.draw_cards(@deck) }
+        @players.each{|player| player.start_game(self)}
         @current_player = pick_first_player
-        @stacks = $suit_characters.keys.map { |suit| Stack.new(suit) }
+        @discard_stacks = $suit_characters.keys.map { |suit| Stack.new(suit) }
+        while @deck.size > 0 do
+            @current_player.turn
+            @current_player = @players.find{|p| p != @current_player}
+        end
     end
 
     def to_s
         hands = @players.map { |player| player.to_s }.join("\n\n") + "\n\n"
-        "The current player is #{@current_player.name}\n\n" + hands
+        current_player = "The current player is #{@current_player.name}"
+        discard = "Discard #{@discard_stacks}"
+        deck = "Deck(#{@deck.size})"
+        "#{current_player}\n#{deck}\n#{discard}\n\n#{hands}"
     end
 
     def pick_first_player

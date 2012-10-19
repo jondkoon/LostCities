@@ -15,7 +15,7 @@ class Stack
         if card.suit == @suit 
             @cards.push card
         else 
-            raise "only cards with suit #{@suit} can be placed on this stack"
+            raise "Wrong Suit"
         end
     end
 
@@ -24,4 +24,21 @@ class Stack
             puts card
         end
     end
+end
+
+class ExpeditionStack < Stack
+
+    alias :super_place_card :place_card
+
+    def place_card(card)
+        if(card > @cards.last)
+            super_place_card(card)
+        else
+            raise "Wrong Value"
+        end
+    end
+    
+    def draw_card
+    end
+
 end

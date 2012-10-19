@@ -16,6 +16,6 @@ class Hand
     end
 
     def to_s
-        @cards.map {|card| "\n - " + card.to_s }.join()
+        @cards.join("  ")
     end
 end
