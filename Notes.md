@@ -9,7 +9,7 @@ Conservative AI
 
 Expedition
 - Choose a suit that has at least a 21 point value
-- lay down the lowest card
+- lay down the lowest card that is eligible
 
 - If you have an existing expedition that takes precedence
 
