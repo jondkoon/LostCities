@@ -2,6 +2,7 @@
 
 class Card
     attr_reader :suit, :rank
+    include Comparable
 
     $suit_characters = {
         spade: '♠',
@@ -19,6 +20,10 @@ class Card
     def initialize(suit, rank)
         @suit = suit
         @rank = rank
+    end
+
+    def <=>(other)
+        value <=> other.value
     end
 
     public

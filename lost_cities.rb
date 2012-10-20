@@ -15,19 +15,19 @@ class LostCities
         @players.each{|player| player.start_game(self)}
         @current_player = pick_first_player
         @discard_stacks = $suit_characters.keys.map { |suit| Stack.new(suit) }
-        while @deck.size > 0 do
+        while @deck.size > 42 do
+            puts self
             @current_player.turn
             @current_player = @players.find{|player| player != @current_player}
-            puts self
         end
     end
 
     def to_s
-        hands = @players.map { |player| player.to_s }.join("\n\n") + "\n\n"
-        current_player = "The current player is #{@current_player.name}"
+        hands = @players.map { |player| player.to_s }.join("\n\n") + "\n"
+        current_player = "\nThe current player is #{@current_player.name}"
         discard = "Discard #{@discard_stacks}"
         deck = "Deck(#{@deck.size})"
-        "#{current_player}\n#{deck}\n#{discard}\n\n#{hands}"
+        "#{current_player} -- #{deck}\n#{discard}\n\n#{hands}"
     end
 
     def pick_first_player

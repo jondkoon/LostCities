@@ -13,6 +13,10 @@ class Player
         discard discard_calculation
     end
 
+    def draw_card_phase
+        @cards.push @game.deck.draw_card
+    end
+
     def discard_calculation
         low_suit = find_low_suit
         low_card = find_low_card_of_suit low_suit
@@ -20,15 +24,7 @@ class Player
     end
 
     def find_low_card_of_suit(suit)
-        low_value = 100
-        low_card = nil
-        @cards.each do |card|
-            if card.value < low_value and card.suit == suit
-                low_card = card
-                low_value = card.value
-            end
-        end
-        low_card
+        @cards.select{|card| card.suit == suit}.min
     end
 
     def find_low_suit
@@ -43,23 +39,16 @@ class Player
         current_suit
     end
 
-    def place_calculation
-
-    end
-
     def calc_suit_values
         @suit_values = Hash.new(0)
         @cards.each {|card| @suit_values[card.suit] += card.value }
     end
 
     def discard(card)
+        puts "-- Discarding #{card}"
         discard_stack = @game.discard_stacks.find{|d| d.suit == card.suit }
         discard_stack.place_card card
-        @cards.delete card
-    end
-
-    def draw_card_phase
-        @cards.push @game.deck.draw_card
+        @cards.delete_if {|c| c.value == card.value and c.suit == card.suit }
     end
 
     def draw_cards(deck)
@@ -80,7 +69,7 @@ class Player
     end
 
     def to_s
-        "#{@name} holds:\n#{@cards.join("  ")}" +
-        "\n\nexpedition stacks: #{@expedition_stacks}"
+        "#{@name} holds(#{@cards.size}):  #{@cards.join("  ")}" +
+        "\nexpedition stacks: #{@expedition_stacks}"
     end
 end
