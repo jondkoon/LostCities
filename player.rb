@@ -32,10 +32,7 @@ class Player
 
     def discard_calculation
         low_suit = find_low_suit
-        p "-- low suit: #{low_suit}"
-        low_card = find_low_card_of_suit low_suit
-        p "-- low card: #{low_card}"
-        low_card
+        find_low_card_of_suit low_suit
     end
 
     def find_low_card_of_suit(suit)
@@ -51,10 +48,12 @@ class Player
     end
 
     def turn_prep
-        @suit_values = Hash.new(0)
-        @cards.each {|card| @suit_values[card.suit] += card.value }
+        @eligible_cards = @cards.select{|card| card_eligible? card}
+        @expedition_cards = @expedition_stacks.map{|s| s.cards}.flatten
+        @cards_in_play = @eligible_cards + @expedition_cards
 
-        @eligible_cards = @cards.map{|card| card_eligible? card}
+        @suit_values = Hash.new(0)
+        @cards_in_play.each {|card| @suit_values[card.suit] += card.value }
     end
 
     def discard(card)
