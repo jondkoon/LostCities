@@ -18,6 +18,7 @@ class LostCities
         while @deck.size > 0 do
             @current_player.turn
             @current_player = @players.find{|player| player != @current_player}
+            puts self
         end
     end
 
