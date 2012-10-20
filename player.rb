@@ -12,7 +12,7 @@ class Player
     end
 
     def place_card_phase
-        high_suit = find_high_suit
+        high_suit = find_high_suit_with_eligible_card
         high_suit_value = @suit_values[high_suit]
         if high_suit_value >= 21
             low_card = find_low_card_of_suit high_suit
@@ -22,12 +22,6 @@ class Player
 
     def draw_card_phase
         @cards.push @game.deck.draw_card
-    end
-
-    def card_eligible?(card)
-        top_card = @expedition_stacks_hash[card.suit].top_card
-        top_value = top_card ? top_card.value : -1
-        card.value > top_value
     end
 
     def discard_calculation
@@ -44,11 +38,24 @@ class Player
     end
 
     def find_high_suit
-        @suit_values.sort.last[0]
+        @suit_values.sort.reverse_each do |suit,v|
+            return suit if suit_eligible? suit
+        end
+    end
+
+    def suit_eligible?(suit)
+        @eligible_cards.any?{|card| card.suit == suit }
+    end
+
+    def card_eligible?(card)
+        top_card = @expedition_stacks_hash[card.suit].top_card
+        top_value = top_card ? top_card.value : -1
+        card.value > top_value
     end
 
     def turn_prep
         @eligible_cards = @cards.select{|card| card_eligible? card}
+        @ineligible_cards = @cards.select{|card| not card_eligible? card}
         @expedition_cards = @expedition_stacks.map{|s| s.cards}.flatten
         @cards_in_play = @eligible_cards + @expedition_cards
 
