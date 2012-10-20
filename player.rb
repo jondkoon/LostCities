@@ -28,15 +28,7 @@ class Player
     end
 
     def find_low_suit
-        current_value = 100
-        current_suit = nil
-        @suit_values.each do |suit, value|
-            if value < current_value
-                current_value = value
-                current_suit = suit
-            end
-        end
-        current_suit
+        @suit_values.sort.first[0]
     end
 
     def calc_suit_values

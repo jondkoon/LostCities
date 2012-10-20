@@ -15,7 +15,7 @@ class LostCities
         @players.each{|player| player.start_game(self)}
         @current_player = pick_first_player
         @discard_stacks = $suit_characters.keys.map { |suit| Stack.new(suit) }
-        while @deck.size > 42 do
+        while @deck.size > 0 do
             puts self
             @current_player.turn
             @current_player = @players.find{|player| player != @current_player}
