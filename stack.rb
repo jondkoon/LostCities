@@ -23,6 +23,10 @@ class Stack
         @cards.last
     end
 
+    def top_value
+        @cards.last ? @cards.last.value : -1
+    end
+
     def to_s
         @cards
     end
@@ -33,14 +37,14 @@ class ExpeditionStack < Stack
     alias :super_place_card :place_card
 
     def place_card(card)
-        if(card > @cards.last)
+        if(card.value > top_value)
             super_place_card(card)
         else
+            p "Error: tried to place #{card} on #{@cards} with top_value #{top_value}"
             raise "Wrong Value"
         end
     end
     
     def draw_card
     end
-
 end

@@ -13,11 +13,18 @@ class Player
 
     def place_card_phase
         high_suit = find_high_suit_with_eligible_card
-        high_suit_value = @suit_values[high_suit]
+        high_suit_value = high_suit ? @suit_values[high_suit] : 0
+        placed_card = false
         if high_suit_value >= 21
-            low_card = find_low_card_of_suit high_suit
+            low_card = find_low_card_of_suit(high_suit, @eligible_cards)
+            if low_card
+                place_card low_card
+                placed_card = true
+            end
         end
-        discard discard_calculation
+        if not placed_card 
+            discard discard_calculation
+        end
     end
 
     def draw_card_phase
@@ -25,19 +32,23 @@ class Player
     end
 
     def discard_calculation
-        low_suit = find_low_suit
-        find_low_card_of_suit low_suit
+        if @ineligible_cards.size > 0
+            @ineligible_cards.first
+        else
+            low_suit = find_low_suit
+            find_low_card_of_suit low_suit
+        end
     end
 
-    def find_low_card_of_suit(suit)
-        @cards.select{|card| card.suit == suit}.min
+    def find_low_card_of_suit(suit, cards=@cards)
+        cards.select{|card| card.suit == suit}.min
     end
 
     def find_low_suit
         @suit_values.sort.first[0]
     end
 
-    def find_high_suit
+    def find_high_suit_with_eligible_card
         @suit_values.sort.reverse_each do |suit,v|
             return suit if suit_eligible? suit
         end
@@ -48,8 +59,7 @@ class Player
     end
 
     def card_eligible?(card)
-        top_card = @expedition_stacks_hash[card.suit].top_card
-        top_value = top_card ? top_card.value : -1
+        top_value = @expedition_stacks_hash[card.suit].top_value
         card.value > top_value
     end
 
@@ -64,9 +74,14 @@ class Player
     end
 
     def discard(card)
-        puts "-- Discarding #{card}"
         discard_stack = @game.discard_stacks.find{|d| d.suit == card.suit }
         discard_stack.place_card card
+        @cards.delete_if {|c| c.value == card.value and c.suit == card.suit }
+    end
+
+    def place_card(card)
+        expedition_stack = @expedition_stacks_hash[card.suit]
+        expedition_stack.place_card card
         @cards.delete_if {|c| c.value == card.value and c.suit == card.suit }
     end
 
