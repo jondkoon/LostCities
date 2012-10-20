@@ -76,13 +76,17 @@ class Player
     def discard(card)
         discard_stack = @game.discard_stacks.find{|d| d.suit == card.suit }
         discard_stack.place_card card
-        @cards.delete_if {|c| c.value == card.value and c.suit == card.suit }
+        delete_card card
     end
 
     def place_card(card)
         expedition_stack = @expedition_stacks_hash[card.suit]
         expedition_stack.place_card card
-        @cards.delete_if {|c| c.value == card.value and c.suit == card.suit }
+        delete_card card
+    end
+
+    def delete_card(card)
+        @cards.delete_at(@cards.index(card))
     end
 
     def draw_cards(deck)
