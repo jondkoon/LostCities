@@ -19,11 +19,12 @@ class Player
 
         @suit_values = Hash.new(0)
         @cards_in_play.each {|card| @suit_values[card.suit] += card.value }
+
+        @eligible_to_pickup = @game.discard_stacks.map{|s| s.top_card}.select{|card| card_eligible? card}
     end
 
     def place_card_phase
         card = place_card_calculation
-
         if card
             place_card card
         else
@@ -32,6 +33,7 @@ class Player
     end
 
     def draw_card_phase
+        draw_card_calculation
         @cards.push @game.deck.draw_card
     end
 
@@ -53,12 +55,20 @@ class Player
         end
     end
 
+    def draw_card_calculation
+        p "to pickup: #{@eligible_to_pickup}"
+        @eligible_to_pickup.each do |card|
+        end
+    end
+
     #Helpers
     def suit_eligible?(suit)
+        return false unless suit
         @eligible_cards.any?{|card| card.suit == suit }
     end
 
     def card_eligible?(card)
+        return false unless card
         top_value = @expedition_stacks_hash[card.suit].top_value
         card.value > top_value or (top_value == 0 and card.value == 0)
     end
