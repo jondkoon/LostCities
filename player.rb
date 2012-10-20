@@ -11,8 +11,15 @@ class Player
 
     def place_card_phase
         card = @cards.pop
-        discard = @game.discard_stacks.find{|d| d.suit == card.suit }
-        discard.place_card card
+        discard card
+    end
+
+    def place_calculation
+    end
+
+    def discard(card)
+        discard_stack = @game.discard_stacks.find{|d| d.suit == card.suit }
+        discard_stack.place_card card
     end
 
     def draw_card_phase

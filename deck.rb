@@ -1,9 +1,11 @@
 class Deck
     attr_reader :cards
+
+    $suits = [:spade, :heart, :club, :diamond, :hash]
+
     def initialize
         @cards = []
-        suits = [:spade, :heart, :club, :diamond, :hash]
-        suits.each do |suit|
+        $suits.each do |suit|
             (2..10).each do |rank| 
                 @cards.push(Card.new(suit,rank))
             end
