@@ -74,7 +74,7 @@ class Player
     end
 
     def find_low_card_of_suit(suit, cards=@cards)
-        cards.select{|card| card.suit == suit}.min
+        cards.select{|card| card.suit == suit}.min_by{|card| card.value}
     end
 
     def find_low_suit
