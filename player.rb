@@ -7,9 +7,16 @@ class Player
         @name = name
         @cards = []
         @expedition_stacks = $suit_characters.keys.map { |suit| ExpeditionStack.new(suit) }
+        @expedition_stacks_hash = Hash[@expedition_stacks.map {|s| [s.suit,s]}]
+        @suit_values = Hash.new(0)
     end
 
     def place_card_phase
+        high_suit = find_high_suit
+        high_suit_value = @suit_values[high_suit]
+        if high_suit_value >= 21
+            low_card = find_low_card_of_suit high_suit
+        end
         discard discard_calculation
     end
 
@@ -17,9 +24,17 @@ class Player
         @cards.push @game.deck.draw_card
     end
 
+    def card_eligible?(card)
+        top_card = @expedition_stacks_hash[card.suit].top_card
+        top_value = top_card ? top_card.value : -1
+        card.value > top_value
+    end
+
     def discard_calculation
         low_suit = find_low_suit
+        p "-- low suit: #{low_suit}"
         low_card = find_low_card_of_suit low_suit
+        p "-- low card: #{low_card}"
         low_card
     end
 
@@ -31,9 +46,15 @@ class Player
         @suit_values.sort.first[0]
     end
 
-    def calc_suit_values
+    def find_high_suit
+        @suit_values.sort.last[0]
+    end
+
+    def turn_prep
         @suit_values = Hash.new(0)
         @cards.each {|card| @suit_values[card.suit] += card.value }
+
+        @eligible_cards = @cards.map{|card| card_eligible? card}
     end
 
     def discard(card)
@@ -54,7 +75,7 @@ class Player
     end
 
     def turn
-        calc_suit_values
+        turn_prep
 
         place_card_phase
         draw_card_phase
