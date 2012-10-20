@@ -38,7 +38,7 @@ class ExpeditionStack < Stack
 
     public
     def place_card(card)
-        if(card.value > top_value)
+        if(card.value > top_value or (top_value == 0 and card.value == 0))
             super_place_card(card)
         else
             puts "Error: tried to place #{card} on #{@cards} with top_value #{top_value}"

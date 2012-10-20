@@ -60,7 +60,7 @@ class Player
 
     def card_eligible?(card)
         top_value = @expedition_stacks_hash[card.suit].top_value
-        card.value > top_value
+        card.value > top_value or (top_value == 0 and card.value == 0)
     end
 
     def turn_prep
