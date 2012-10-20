@@ -36,15 +36,23 @@ class ExpeditionStack < Stack
 
     alias :super_place_card :place_card
 
+    public
     def place_card(card)
         if(card.value > top_value)
             super_place_card(card)
         else
-            p "Error: tried to place #{card} on #{@cards} with top_value #{top_value}"
+            puts "Error: tried to place #{card} on #{@cards} with top_value #{top_value}"
             raise "Wrong Value"
         end
     end
     
     def draw_card
+    end
+
+    def score
+        sum = @cards.reduce(0) {|sum, card| sum + card.value }
+        multiplier = 1 + @cards.count {|c| c.value == 0 }
+        bonus = @cards.size >= 8 ? 20 : 0
+        (sum + bonus) * multiplier
     end
 end

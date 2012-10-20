@@ -102,6 +102,10 @@ class Player
         draw_card_phase
     end
 
+    def score
+        @expedition_stacks.reduce(0) {|sum, s| sum + s.score}
+    end
+
     def to_s
         "#{@name} holds(#{@cards.size}):  #{@cards.join("  ")}" +
         "\nexpedition stacks: #{@expedition_stacks}"

@@ -20,6 +20,14 @@ class LostCities
             @current_player.turn
             @current_player = @players.find{|player| player != @current_player}
         end
+        done
+    end
+
+    def done
+        p self
+        @players.each do |player|
+            puts "#{player.name}'s score is #{player.score}"
+        end
     end
 
     def to_s
@@ -42,4 +50,3 @@ players = [
 
 game = LostCities.new(players)
 game.start
-puts game
