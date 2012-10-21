@@ -27,6 +27,10 @@ class Stack
         @cards.last ? @cards.last.value : -1
     end
 
+    def size
+        @cards.size
+    end
+
     def to_s
         @cards
     end

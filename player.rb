@@ -11,6 +11,11 @@ class Player
         @suit_values = Hash.new(0)
     end
 
+    def game_prep(game)
+        @game = game
+        @discard_stack_hash = Hash[@game.discard_stacks.map{|s| [s.suit,s]}]
+    end
+
     def turn_prep
         @eligible_cards = @cards.select{|card| card_eligible? card}
         @ineligible_cards = @cards.select{|card| not card_eligible? card}
@@ -20,7 +25,10 @@ class Player
         @suit_values = Hash.new(0)
         @cards_in_play.each {|card| @suit_values[card.suit] += card.value }
 
-        @eligible_to_pickup = @game.discard_stacks.map{|s| s.top_card}.select{|card| card_eligible? card}
+        @expedition_values = Hash.new(0)
+        @expedition_cards.each {|card| @expedition_values[card.suit] += card.value }
+
+        @just_discarded = nil
     end
 
     def place_card_phase
@@ -33,8 +41,15 @@ class Player
     end
 
     def draw_card_phase
-        draw_card_calculation
-        @cards.push @game.deck.draw_card
+        card = draw_card_calculation
+        if card
+            @cards.push draw_from_discard(card.suit)
+            puts "drew card #{card} from discard"
+        else
+            drew = @game.deck.draw_card
+            @cards.push drew
+            puts "drew card #{drew} from deck"
+        end
     end
 
     #Calculations
@@ -56,9 +71,13 @@ class Player
     end
 
     def draw_card_calculation
-        p "to pickup: #{@eligible_to_pickup}"
-        @eligible_to_pickup.each do |card|
-        end
+        eligible_to_pickup = @game.discard_stacks.map{|s| s.top_card}.select{|card| card_eligible? card and card != @just_discarded}
+        puts "eligible to pickup #{eligible_to_pickup}"
+        eligible_to_pickup.select do |card| 
+            @expedition_stacks_hash[card.suit].size > 0 or @suit_values[card.suit] + card.value >= 21
+        end.sort_by do |card|
+            card.value
+        end.last
     end
 
     #Helpers
@@ -92,9 +111,13 @@ class Player
         @cards = deck.draw_cards(8)
     end
 
+    def draw_from_discard(suit)
+        @discard_stack_hash[suit].draw_card
+    end
+
     def discard(card)
-        discard_stack = @game.discard_stacks.find{|d| d.suit == card.suit }
-        discard_stack.place_card card
+        @just_discarded = card
+        @discard_stack_hash[card.suit].place_card card
         delete_card card
     end
 
@@ -110,8 +133,8 @@ class Player
 
     public
     def start_game(game)
-        @game = game
-        draw_cards(@game.deck)
+        game_prep(game)
+        draw_cards(game.deck)
     end
 
     def turn
