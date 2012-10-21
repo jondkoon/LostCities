@@ -54,7 +54,7 @@ class Player
     def place_card_calculation
         high_suit = find_high_suit_with_eligible_card
         high_suit_value = high_suit ? @suit_values[high_suit] : 0
-        if high_suit_value >= 34
+        if high_suit_value >= 31
             return find_low_card_of_suit(high_suit, @eligible_cards)
         end
     end
@@ -70,7 +70,7 @@ class Player
     def draw_card_calculation
         eligible_to_pickup = @game.discard_stacks.map{|s| s.top_card}.select{|card| card_eligible? card and card != @just_discarded}
         eligible_to_pickup.select do |card| 
-            @expedition_stacks_hash[card.suit].size > 0 or @suit_values[card.suit] + card.value >= 11
+            @expedition_stacks_hash[card.suit].size > 0 or @suit_values[card.suit] + card.value >= 16
         end.sort_by do |card|
             card.value
         end.last
