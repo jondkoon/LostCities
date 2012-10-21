@@ -65,14 +65,12 @@ class Player
         if @ineligible_cards.size > 0
             @ineligible_cards.first
         else
-            low_suit = find_low_suit
-            find_low_card_of_suit low_suit
+            find_low_card_of_suit find_low_suit
         end
     end
 
     def draw_card_calculation
         eligible_to_pickup = @game.discard_stacks.map{|s| s.top_card}.select{|card| card_eligible? card and card != @just_discarded}
-        puts "eligible to pickup #{eligible_to_pickup}"
         eligible_to_pickup.select do |card| 
             @expedition_stacks_hash[card.suit].size > 0 or @suit_values[card.suit] + card.value >= 21
         end.sort_by do |card|

@@ -54,8 +54,8 @@ class ExpeditionStack < Stack
     end
 
     def score
+        return 0 if size == 0
         sum = @cards.reduce(0) {|sum, card| sum + card.value }
-        return 0 if sum == 0
         multiplier = 1 + @cards.count {|c| c.value == 0 }
         bonus = @cards.size >= 8 ? 20 : 0
         ((sum - 20) * multiplier) + bonus
