@@ -52,8 +52,16 @@ players = [
 game = LostCities.new(players)
 high_score_sum = 0
 games_to_play = 1000
+all_time_high = 0
+high_score_game = ""
 games_to_play.times do
     game.start
     high_score_sum += game.high_score
+    if game.high_score > all_time_high
+        all_time_high = game.high_score
+        high_score_game = game.to_s
+    end
 end
 puts "High score average #{high_score_sum/games_to_play}"
+puts "All time high score is #{all_time_high}"
+puts high_score_game
