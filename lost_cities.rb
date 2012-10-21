@@ -19,7 +19,6 @@ class LostCities
             @current_player.turn
             @current_player = @players.find{|player| player != @current_player}
         end
-        done
     end
 
     def done
