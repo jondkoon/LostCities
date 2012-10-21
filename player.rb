@@ -5,14 +5,14 @@ class Player
 
     def initialize(name)
         @name = name
-        @cards = []
-        @expedition_stacks = $suit_characters.keys.map { |suit| ExpeditionStack.new(suit) }
-        @expedition_stacks_hash = Hash[@expedition_stacks.map {|s| [s.suit,s]}]
-        @suit_values = Hash.new(0)
     end
 
     def game_prep(game)
         @game = game
+        @cards = []
+        @expedition_stacks = $suit_characters.keys.map { |suit| ExpeditionStack.new(suit) }
+        @expedition_stacks_hash = Hash[@expedition_stacks.map {|s| [s.suit,s]}]
+        @suit_values = Hash.new(0)
         @discard_stack_hash = Hash[@game.discard_stacks.map{|s| [s.suit,s]}]
     end
 
@@ -44,11 +44,9 @@ class Player
         card = draw_card_calculation
         if card
             @cards.push draw_from_discard(card.suit)
-            puts "drew card #{card} from discard"
         else
             drew = @game.deck.draw_card
             @cards.push drew
-            puts "drew card #{drew} from deck"
         end
     end
 
@@ -95,11 +93,11 @@ class Player
     end
 
     def find_low_suit
-        @suit_values.sort.first[0]
+        @suit_values.sort_by{|k,v| v}.first[0]
     end
 
     def find_high_suit_with_eligible_card
-        @suit_values.sort.reverse_each do |suit,v|
+        @suit_values.sort_by{|k,v| v}.reverse_each do |suit,v|
             return suit if suit_eligible? suit
         end
     end

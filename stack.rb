@@ -51,6 +51,7 @@ class ExpeditionStack < Stack
     end
     
     def draw_card
+        raise "Can't draw card from expedition"
     end
 
     def score
