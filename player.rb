@@ -28,6 +28,9 @@ class Player
         @expedition_values = Hash.new(0)
         @expedition_cards.each {|card| @expedition_values[card.suit] += card.value }
 
+        @cards_in_hand_by_suit = Hash.new([])
+        @cards.each {|card| @cards_in_hand_by_suit[card.suit].push card }
+
         @just_discarded = nil
     end
 
@@ -52,10 +55,14 @@ class Player
 
     #Calculations
     def place_card_calculation
+        turns_left = turns_left_calculation
+        puts "turns_left: #{turns_left}"
         high_suit = find_high_suit_with_eligible_card
         high_suit_value = high_suit ? @suit_values[high_suit] : 0
-        if high_suit_value >= 31
-            return find_low_card_of_suit(high_suit, @eligible_cards)
+        if (high_suit_value >= 31 and #wait for a certain number before starting an expedition
+            (@expedition_stacks_hash[high_suit].size != 0 or #if you already started keep going
+            turns_left >= @cards_in_hand_by_suit[high_suit].size)) #otherwise don't start if there is not enough turns left
+                return find_low_card_of_suit(high_suit, @eligible_cards)
         end
     end
 
@@ -63,7 +70,7 @@ class Player
         if @ineligible_cards.size > 0
             @ineligible_cards.first
         else
-            find_low_card_of_suit find_low_suit
+            find_low_card_of_suit find_low_suit_in_hand
         end
     end
 
@@ -74,6 +81,15 @@ class Player
         end.sort_by do |card|
             card.value
         end.last
+    end
+
+    def turns_left_calculation
+        cards_drawn = 44 - @game.deck.size
+        return 60 if cards_drawn < 20
+        average_turns_per_card = @game.turns / cards_drawn.to_f
+        turns_left = (@game.deck.size * average_turns_per_card) / 2 
+        p turns_left
+        turns_left.floor
     end
 
     #Helpers
@@ -92,8 +108,10 @@ class Player
         cards.select{|card| card.suit == suit}.min_by{|card| card.value}
     end
 
-    def find_low_suit
-        @suit_values.sort_by{|k,v| v}.first[0]
+    def find_low_suit_in_hand
+        @suit_values.sort_by{|k,v| v}.each do |suit,v|
+            return suit if @cards.any?{|card| card.suit == suit }
+        end
     end
 
     def find_high_suit_with_eligible_card

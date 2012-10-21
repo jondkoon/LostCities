@@ -17,13 +17,16 @@ class LostCities
         @current_player = pick_first_player
         @players.each{|player| player.start_game(self)}
         while @deck.size > 0 do
+            p self
             @current_player.turn
             @current_player = @players.find{|player| player != @current_player}
             @turns += 1
         end
+        done
     end
 
     def done
+        p self
         @players.each do |player|
             puts "#{player.name}'s score is #{player.score}"
         end
@@ -52,27 +55,29 @@ players = [
 ]
 
 game = LostCities.new(players)
-high_score_sum = 0
-turns_sum = 0
-games_to_play = 1000
-all_time_high = 0
-high_score_game = ""
-games_to_play.times do
-    game.start
-    high_score_sum += game.high_score
-    turns_sum += game.turns
-    if game.high_score > all_time_high
-        all_time_high = game.high_score
-        high_score_game = game.to_s
-    end
-end
-high_score_average = high_score_sum/games_to_play
-turns_average = turns_sum/games_to_play
-points_per_turn_average = high_score_average.to_f / turns_average
+game.start
 
-
-puts "High score average is #{high_score_average}"
-puts "Turns average is #{turns_average}"
-puts "Point per turn average is #{points_per_turn_average}"
-puts "All time high score is #{all_time_high}"
-puts high_score_game
+#high_score_sum = 0
+#turns_sum = 0
+#games_to_play = 1000
+#all_time_high = 0
+#high_score_game = ""
+#games_to_play.times do
+#    game.start
+#    high_score_sum += game.high_score
+#    turns_sum += game.turns
+#    if game.high_score > all_time_high
+#        all_time_high = game.high_score
+#        high_score_game = game.to_s
+#    end
+#end
+#high_score_average = high_score_sum/games_to_play
+#turns_average = turns_sum/games_to_play
+#points_per_turn_average = high_score_average.to_f / turns_average
+#
+#
+#puts "High score average is #{high_score_average}"
+#puts "Turns average is #{turns_average}"
+#puts "Point per turn average is #{points_per_turn_average}"
+#puts "All time high score is #{all_time_high}"
+#puts high_score_game
