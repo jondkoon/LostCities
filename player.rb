@@ -78,7 +78,7 @@ class Player
     end
 
     def to_s
-        "#{@name} holds(#{@cards.size}):  #{@cards.join("  ")}" +
-        "\nexpedition stacks: #{@expedition_stacks}"
+        #"#{@name} holds(#{@cards.size}):  #{@cards.join("  ")}" +
+        "#{@name}'s expedition stacks: #{@expedition_stacks}"
     end
 end

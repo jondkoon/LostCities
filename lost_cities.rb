@@ -1,7 +1,7 @@
 require_relative 'card'
 require_relative 'deck'
-require_relative 'player'
 require_relative 'computer'
+require_relative 'human'
 require_relative 'stack'
 
 class LostCities
@@ -18,6 +18,7 @@ class LostCities
         @current_player = pick_first_player
         @players.each{|player| player.start_game(self)}
         while @deck.size > 0 do
+            puts self
             @current_player.turn
             @current_player = @players.find{|player| player != @current_player}
             @turns += 1
@@ -42,7 +43,7 @@ class LostCities
 
     def to_s
         hands = @players.map { |player| player.to_s }.join("\n\n") + "\n"
-        current_player = "\nThe current player is #{@current_player.name}"
+        current_player = "\n#{@current_player.name}'s turn"
         discard = "Discard #{@discard_stacks}"
         deck = "Deck(#{@deck.size})"
         "#{current_player} -- #{deck}\n#{discard}\n\n#{hands}"
@@ -50,7 +51,7 @@ class LostCities
 end
 
 players = [
-    Computer.new("Jon"),
+    Human.new("Jon"),
     Computer.new("Julie")
 ]
 
