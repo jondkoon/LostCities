@@ -1,6 +1,7 @@
 require_relative 'card'
 require_relative 'deck'
 require_relative 'player'
+require_relative 'computer'
 require_relative 'stack'
 
 class LostCities
@@ -17,7 +18,6 @@ class LostCities
         @current_player = pick_first_player
         @players.each{|player| player.start_game(self)}
         while @deck.size > 0 do
-            p self
             @current_player.turn
             @current_player = @players.find{|player| player != @current_player}
             @turns += 1
@@ -26,7 +26,7 @@ class LostCities
     end
 
     def done
-        p self
+        puts self
         @players.each do |player|
             puts "#{player.name}'s score is #{player.score}"
         end
@@ -50,8 +50,8 @@ class LostCities
 end
 
 players = [
-    Player.new("Jon"),
-    Player.new("Julie")
+    Computer.new("Jon"),
+    Computer.new("Julie")
 ]
 
 game = LostCities.new(players)
