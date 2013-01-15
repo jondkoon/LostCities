@@ -43,7 +43,7 @@ class Human < Player
                 print "Choose a discard stack: "
                 choice = gets.chomp
             end while not choice.match(/[1-5]/)
-            drew = @game.discard_stacks[choice.to_i].draw_card
+            drew = @game.discard_stacks[choice.to_i - 1].draw_card
         end
         @cards.push drew
     end
